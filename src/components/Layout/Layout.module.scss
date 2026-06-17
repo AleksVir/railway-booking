@@ -1,0 +1,67 @@
+.wrapper {
+   width: 100%;
+   margin: 0 auto;
+   background-color: var(--color-secondary-light);
+}
+
+/* HEADER */
+.header {
+   min-height: 59rem;
+   display: flex;
+   flex-direction: column;
+}
+
+/* FULL WIDTH NAV */
+.navFull {
+   width: 100%;
+}
+
+/* HERO WRAPPER (центр страницы как HowItWorks) */
+.hero {
+   display: flex;
+   justify-content: center;
+}
+
+/* внутренний контейнер */
+.heroInner {
+   width: 100%;
+   max-width: 130rem;
+
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   align-items: center;
+   gap: 6rem;
+
+   padding-top: 25rem;
+}
+
+/* LEFT / RIGHT */
+.heroLeft {
+   display: flex;
+   flex-direction: column;
+}
+
+.heroRight {
+   display: flex;
+   justify-content: flex-end;
+}
+
+/* MAIN */
+.main {
+   width: 100%;
+}
+
+/* BACKGROUNDS */
+.header-main {
+   background-image: url('./img/background-main.png');
+   border-bottom: solid 1rem var(--color-yellow-orange);
+}
+
+.header-search {
+   background-image: url('./img/background-search.png');
+}
+
+.header-success {
+   background-image: url('./img/background-success.png');
+   min-height: 83rem;
+}

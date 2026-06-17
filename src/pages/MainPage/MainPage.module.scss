@@ -1,0 +1,28 @@
+.title {
+   font-weight: var(--fw-1);
+   font-size: var(--fs-72);
+   line-height: var(--fh-84);
+   color: var(--color-main-light);
+   width: 51rem;
+}
+
+.titleBold {
+   font-weight: var(--fw-7);
+}
+
+/* адаптив */
+@media (max-width: 1299px) {
+   .title {
+      font-size: var(--fs-52);
+      line-height: var(--fh-55);
+      width: 31rem;
+   }
+}
+
+@media (max-width: 1099px) {
+   .title {
+      font-size: var(--fs-42);
+      line-height: var(--fh-45);
+      width: 30rem;
+   }
+}

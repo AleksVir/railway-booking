@@ -1,0 +1,39 @@
+@use '../../scss/mixins';
+
+.how {
+   width: 100%;
+   background: url('./background-middle.png');
+   background-color: var(--color-main-light);
+   color: var(--color-main-light);
+
+}
+
+/* 👇 единый контейнер как в других секциях */
+.how__container {
+   max-width: 170rem;
+   margin: 0 auto;
+   padding: 6rem 10rem 10rem;
+}
+
+.how__wrapperTop {
+   display: flex;
+   justify-content: space-between;
+   align-items: baseline;
+   margin-bottom: 10rem;
+}
+
+.how__title {
+   @include mixins.title;
+}
+
+.how__btn {
+   @include mixins.button-white;
+   @include mixins.font-no-color(var(--fw-7), var(--fs-24), var(--fh-28));
+   padding: 1.5rem 7.5rem;
+}
+
+.how__steps {
+   display: flex;
+   justify-content: space-between;
+   gap: 4rem;
+}

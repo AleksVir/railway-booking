@@ -1,0 +1,36 @@
+@use '../../scss/mixins';
+.about {
+   width: 100%;
+   background: var(--color-main-light);
+   color: var(--color-main-dark);
+
+   display: flex;
+   justify-content: center; /* 🔥 центрируем как HowItWorks */
+   padding: 15rem 2rem 10rem;
+}
+
+.about__inner {
+   width: 100%;
+   max-width: 150rem; /* 🔥 единый контейнер */
+}
+
+.about__title {
+   @include mixins.title;
+}
+
+.about__text {
+   margin-top: 3rem;
+   display: flex;
+   flex-direction: column;
+
+   border-left: solid 0.9rem var(--color-yellow-orange);
+
+   & span {
+      padding-left: 1.8rem;
+      @include mixins.font-no-color(var(--fw-4), var(--fs-24), var(--fh-28));
+   }
+
+   & span:not(:last-child) {
+      margin-bottom: 2.8rem;
+   }
+}

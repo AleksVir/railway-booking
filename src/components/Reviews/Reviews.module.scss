@@ -1,0 +1,24 @@
+@use '../../scss/mixins';
+
+.reviews {
+   background: var(--color-main-light);
+   color: var(--color-main-dark);
+   width: 100%;
+}
+
+.reviews__container {
+   max-width: 170rem;
+   margin: 0 auto;
+   padding: 15rem 10rem 10rem;
+}
+
+.reviews__title {
+   @include mixins.title;
+}
+
+.reviews__cards {
+   margin-top: 8rem;
+   display: flex;
+   flex-wrap: wrap;
+   gap: 4rem;
+}
