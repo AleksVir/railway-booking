@@ -15,7 +15,7 @@ import links from "./data/links.jsx";
 
 function App() {
    return (
-      <BrowserRouter basename="/fe-48-diplom">
+      <BrowserRouter basename="/railway-booking">
          <Routes>
             <Route path={links.main} element={<MainPage />} />
             <Route path={links.trains} element={<TrainSelectionPage />} />
