@@ -13,10 +13,11 @@ import styles from "./PassengersPage.module.scss";
 
 function PassengersPage() {
    return (
-      <Layout pic={picsOptions.search}>
-         <MainSearchBlock width={widthOptions.wide} />
-
-         <ProgressBar step={2} />
+      <Layout
+      pic={picsOptions.search}
+      searchBlock={<MainSearchBlock width={widthOptions.wide} />}
+   >
+      <ProgressBar step={2} />
 
          <div className={styles.body}>
             <SidebarDetails />

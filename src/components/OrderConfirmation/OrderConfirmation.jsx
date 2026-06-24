@@ -165,7 +165,7 @@ function OrderConfirmation() {
 
       dispatch(
          postOrder({
-            url: process.env.REACT_APP_POST_ORDER,
+            url: import.meta.env.VITE_POST_ORDER,
             request,
          })
       );

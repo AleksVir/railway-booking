@@ -51,9 +51,11 @@ function OrderConfirmationPage() {
    );
 
    return (
-      <Layout pic={picsOptions.search}>
-         <MainSearchBlock width={widthOptions.wide} />
-         <ProgressBar step={4} />
+      <Layout
+      pic={picsOptions.search}
+      searchBlock={<MainSearchBlock width={widthOptions.wide} />}
+   >
+      <ProgressBar step={4} />
          <div className={styles.body}>{midBody}</div>
       </Layout>
    );

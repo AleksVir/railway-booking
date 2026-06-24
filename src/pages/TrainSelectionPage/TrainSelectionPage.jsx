@@ -11,11 +11,16 @@ import TrainSelection from "../../components/TrainSelection/TrainSelection.jsx";
 import PaginationItem from "../../components/TrainSelection/Pagination/Pagination.jsx";
 import LoadingAnimation from "../../components/TrainSelection/LoadingAnimation/LoadingAnimation.jsx";
 
-import { fetchTrainsOptions, fetchLastTickets } from "../../store/thunks/asyncThunks.jsx";
+import {
+   fetchTrainsOptions,
+   fetchLastTickets,
+} from "../../store/thunks/asyncThunks.jsx";
 
 import {
    selectLimit,
    selectCurrentPage,
+   selectOffset,
+   selectSort,
    changeOffset,
    setCurrentPage,
 } from "../../store/slices/sortSlice.jsx";
@@ -23,13 +28,18 @@ import {
 import {
    selectDepartureCity,
    selectArrivalCity,
-   selectDepartureDate,
 } from "../../store/slices/searchSlice.jsx";
 
 import {
    selectTotalCount,
    selectLoading as selectLoadingTrains,
 } from "../../store/slices/trainsSlice.jsx";
+
+import {
+   selectOptions,
+   selectPrices,
+   selectTime,
+} from "../../store/slices/sidebarSelectSlice.jsx";
 
 import { selectLoading as selectLoadingLastTickets } from "../../store/slices/lastTicketsSlice.jsx";
 
@@ -46,12 +56,16 @@ function TrainSelectionPage() {
    const dispatch = useDispatch();
 
    const limit = useSelector(selectLimit) ?? 10;
+   const offset = useSelector(selectOffset) ?? 0;
+   const sort = useSelector(selectSort);
+   const options = useSelector(selectOptions);
+const prices = useSelector(selectPrices);
+const time = useSelector(selectTime);
    const total = useSelector(selectTotalCount) ?? 0;
    const currentPage = useSelector(selectCurrentPage) ?? 1;
 
    const departureCity = useSelector(selectDepartureCity);
    const arrivalCity = useSelector(selectArrivalCity);
-   const departureDate = useSelector(selectDepartureDate);
 
    const loadingTrains = useSelector(selectLoadingTrains);
    const loadingLastTickets = useSelector(selectLoadingLastTickets);
@@ -62,22 +76,79 @@ function TrainSelectionPage() {
    const TICKETS_API = import.meta.env.VITE_TICKETS;
    const LAST_TICKETS_API = import.meta.env.VITE_LAST_TICKETS;
 
-   // ✅ ПРАВИЛЬНЫЙ URL
- const url = useMemo(() => {
+   const url = useMemo(() => {
    if (!departureId || !arrivalId || !TICKETS_API) {
       return null;
    }
 
-   return `${TICKETS_API}?from_city_id=${departureId}&to_city_id=${arrivalId}`;
-}, [departureId, arrivalId, TICKETS_API]);
+   const params = new URLSearchParams({
+      from_city_id: departureId,
+      to_city_id: arrivalId,
+      limit: String(limit),
+      offset: String(offset),
+      sort: sort?.value || sort || "date",
+   });
 
-   // загрузка поездов
+   if (options.firstClass) params.append("have_first_class", "true");
+   if (options.secondClass) params.append("have_second_class", "true");
+   if (options.thirdClass) params.append("have_third_class", "true");
+   if (options.fourthClass) params.append("have_fourth_class", "true");
+   if (options.wifi) params.append("have_wifi", "true");
+   if (options.express) params.append("is_express", "true");
+
+   if (prices.min) params.append("price_from", String(prices.min));
+   if (prices.max) params.append("price_to", String(prices.max));
+
+   if (time.to.departure.min !== 0) {
+      params.append("start_departure_hour_from", String(Math.floor(time.to.departure.min / 60)));
+   }
+
+   if (time.to.departure.max !== 24 * 60) {
+      params.append("start_departure_hour_to", String(Math.floor(time.to.departure.max / 60)));
+   }
+
+   if (time.to.arrival.min !== 0) {
+      params.append("start_arrival_hour_from", String(Math.floor(time.to.arrival.min / 60)));
+   }
+
+   if (time.to.arrival.max !== 24 * 60) {
+      params.append("start_arrival_hour_to", String(Math.floor(time.to.arrival.max / 60)));
+   }
+
+   if (time.back.departure.min !== 0) {
+      params.append("end_departure_hour_from", String(Math.floor(time.back.departure.min / 60)));
+   }
+
+   if (time.back.departure.max !== 24 * 60) {
+      params.append("end_departure_hour_to", String(Math.floor(time.back.departure.max / 60)));
+   }
+
+   if (time.back.arrival.min !== 0) {
+      params.append("end_arrival_hour_from", String(Math.floor(time.back.arrival.min / 60)));
+   }
+
+   if (time.back.arrival.max !== 24 * 60) {
+      params.append("end_arrival_hour_to", String(Math.floor(time.back.arrival.max / 60)));
+   }
+
+   return `${TICKETS_API}?${params.toString()}`;
+}, [
+   departureId,
+   arrivalId,
+   TICKETS_API,
+   limit,
+   offset,
+   sort,
+   options,
+   prices,
+   time,
+]);
+
    useEffect(() => {
       if (!url) return;
       dispatch(fetchTrainsOptions(url));
    }, [dispatch, url]);
 
-   // очистка + last tickets
    useEffect(() => {
       dispatch(removeTrainData());
       dispatch(removeSeatsData());
@@ -95,16 +166,20 @@ function TrainSelectionPage() {
 
    if (loadingTrains || loadingLastTickets) {
       return (
-         <Layout pic={picsOptions.search}>
+         <Layout
+            pic={picsOptions.search}
+            searchBlock={<MainSearchBlock width={widthOptions.wide} />}
+         >
             <LoadingAnimation />
          </Layout>
       );
    }
 
-
    return (
-      <Layout pic={picsOptions.search}>
-         <MainSearchBlock width={widthOptions.wide} />
+      <Layout
+         pic={picsOptions.search}
+         searchBlock={<MainSearchBlock width={widthOptions.wide} />}
+      >
          <ProgressBar step={1} />
 
          <div className={styles.body}>

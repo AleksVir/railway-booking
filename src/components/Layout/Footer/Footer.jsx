@@ -49,7 +49,7 @@ function Footer() {
          setError(null);
          setLoading(true);
 
-         const response = await fetch(process.env.REACT_APP_SUBSCRIPTION_URL, {
+         const response = await fetch(import.meta.env.VITE_SUBSCRIPTION_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(emailValue),

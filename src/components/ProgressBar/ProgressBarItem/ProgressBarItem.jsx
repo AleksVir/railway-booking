@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import styles from './ProgressBarItem.module.scss';
 
-import vector from '../img/veсtor.svg';
+import vector from '../img/vector.svg';
 
 function ProgressBarItem({ step, number, id, name, totalSteps, img }) {
    const imgClasses = `${styles.breaker} ${

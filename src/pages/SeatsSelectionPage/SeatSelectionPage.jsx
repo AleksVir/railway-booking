@@ -20,10 +20,11 @@ function SeatsSelectionPage() {
    const selectedTrainIndex = useSelector(selectIndex);
 
    return (
-      <Layout pic={picsOptions.search}>
-         <MainSearchBlock width={widthOptions.wide} />
-
-         <ProgressBar step={1} />
+      <Layout
+      pic={picsOptions.search}
+      searchBlock={<MainSearchBlock width={widthOptions.wide} />}
+   >
+      <ProgressBar step={1} />
 
          <div className={styles.body}>
             {selectedTrainIndex !== null ? (

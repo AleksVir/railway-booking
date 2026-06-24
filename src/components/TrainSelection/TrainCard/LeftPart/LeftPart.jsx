@@ -12,7 +12,9 @@ function LeftPart({ depTrain, arrTrain, depFrom, depTo, arrTo }) {
          <div className={styles.img}>
             <img src={train} alt="иконка поезда" />
          </div>
-         <span className={styles['train-name']}>{depTrain}</span>
+         <span className={styles['train-name']}>
+   {depTrain || "Поезд"}
+</span>
          <span className={styles['departure-city']}>
             {depFrom}
             <img

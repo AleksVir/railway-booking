@@ -13,10 +13,11 @@ import styles from "./PaymentOptionsPage.module.scss";
 
 function PaymentOptionsPage() {
    return (
-      <Layout pic={picsOptions.search}>
-         <MainSearchBlock width={widthOptions.wide} />
-
-         <ProgressBar step={3} />
+      <Layout
+      pic={picsOptions.search}
+      searchBlock={<MainSearchBlock width={widthOptions.wide} />}
+   >
+      <ProgressBar step={3} />
 
          <div className={styles.body}>
             <SidebarDetails />

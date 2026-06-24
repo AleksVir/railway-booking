@@ -17,12 +17,15 @@ function Layout({ pic, heroLeft, heroRight, searchBlock, children }) {
             </div>
 
             <div className={styles.hero}>
-               <div className={styles.heroInner}>
+               <div
+                  className={`${styles.heroInner} ${
+                     pic !== "main" ? styles.heroInnerCompact : ""
+                  }`}
+               >
 
                   <div className={styles.heroLeft}>
                      {heroLeft}
 
-                     {/* 🔥 ПОИСК В HERO */}
                      {searchBlock}
                   </div>
 
@@ -48,6 +51,7 @@ Layout.propTypes = {
    pic: PropTypes.string.isRequired,
    heroLeft: PropTypes.node,
    heroRight: PropTypes.node,
+   searchBlock: PropTypes.node,
    children: PropTypes.node,
 };
 
