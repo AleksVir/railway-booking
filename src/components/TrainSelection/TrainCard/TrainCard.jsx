@@ -17,12 +17,10 @@ import links from "../../../data/links.jsx";
 
 import styles from "./TrainCard.module.scss";
 
-// цены и количество билетов совмещать для двух поездов? - сейчас так делаю
-// или отдельно выводить для поезда туда и для поезда обратно? - тогда размер карточки увеличится. но это логичнее.
-
 function TrainCard({ ticket, id, editBtn }) {
    const navigate = useNavigate();
    const dispatch = useDispatch();
+
    const availableSeats = ticket?.available_seats_info;
    const priceDep = ticket?.departure?.price_info;
    const priceArr = ticket?.arrival?.price_info;
@@ -32,44 +30,49 @@ function TrainCard({ ticket, id, editBtn }) {
    const arrivalFrom = ticket?.arrival?.from;
    const arrivalTo = ticket?.arrival?.to;
 
-  const onClick = (evt) => {
-   evt.preventDefault();
+   const onClick = (evt) => {
+      evt.preventDefault();
 
-   if (!ticket?.departure) return;
+      if (!ticket?.departure) return;
 
-   dispatch(setIndex(id));
+      dispatch(setIndex(id));
 
-   dispatch(
-      setTrains({
-         value: ticket.departure,
-         direction: directions.departure,
-      })
-   );
-
-   if (ticket.arrival) {
       dispatch(
          setTrains({
-            value: ticket.arrival,
-            direction: directions.arrival,
+            value: ticket.departure,
+            direction: directions.departure,
          })
       );
-   }
 
-   navigate(links.seats);
-};
+      if (ticket.arrival) {
+         dispatch(
+            setTrains({
+               value: ticket.arrival,
+               direction: directions.arrival,
+            })
+         );
+      }
+
+      navigate(links.seats);
+   };
+
+   const depTrainName =
+   ticket?.departure?.train?.name
+      ?.replace(/^undefined/i, "Поезд")
+      ?.replace(/^null/i, "Поезд") || "Поезд";
 
    return (
-      // eslint-disable-next-line jsx-a11y/click-events-have-key-events
       <div className={styles.card} role="button" tabIndex={0}>
          <div className={styles.card__left}>
             <LeftPart
-               depTrain={ticket?.departure?.train?.name}
+               depTrain={depTrainName}
                depFrom={ticket?.departure?.from?.city?.name}
                depTo={ticket?.departure?.to?.city?.name}
                arrTrain={ticket?.arrival?.train?.name}
                arrTo={ticket?.arrival?.to?.city?.name}
             />
          </div>
+
          <div className={styles.card__middle}>
             <MiddlePart
                depTime={departureFrom?.datetime}
@@ -81,6 +84,7 @@ function TrainCard({ ticket, id, editBtn }) {
                arrCity={departureTo?.city?.name}
                arrStation={departureTo?.railway_station_name}
             />
+
             {ticket?.arrival && (
                <MiddlePart
                   depTime={arrivalFrom?.datetime}
@@ -94,6 +98,7 @@ function TrainCard({ ticket, id, editBtn }) {
                />
             )}
          </div>
+
          <div className={styles.card__right}>
             <RightPart
                id={id}
@@ -103,8 +108,8 @@ function TrainCard({ ticket, id, editBtn }) {
                priceArr={priceArr}
                wifi={ticket?.departure?.have_wifi || ticket?.arrival?.have_wifi}
                conditioner={
-                  ticket?.departure?.have_air_conditioning ||
-                  ticket?.arrival?.have_air_conditioning
+                  Boolean(ticket?.departure?.have_air_conditioning) ||
+                  Boolean(ticket?.arrival?.have_air_conditioning)
                }
                express={
                   ticket?.departure?.is_express || ticket?.arrival?.is_express
@@ -117,7 +122,6 @@ function TrainCard({ ticket, id, editBtn }) {
 }
 
 TrainCard.propTypes = {
-   // eslint-disable-next-line react/forbid-prop-types
    ticket: PropTypes.object,
    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
    editBtn: PropTypes.node,

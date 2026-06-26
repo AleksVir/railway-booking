@@ -28,6 +28,8 @@ import {
 import {
    selectDepartureCity,
    selectArrivalCity,
+   selectDepartureDate,
+  selectReturnDate,
 } from "../../store/slices/searchSlice.jsx";
 
 import {
@@ -58,14 +60,18 @@ function TrainSelectionPage() {
    const limit = useSelector(selectLimit) ?? 10;
    const offset = useSelector(selectOffset) ?? 0;
    const sort = useSelector(selectSort);
+
    const options = useSelector(selectOptions);
-const prices = useSelector(selectPrices);
-const time = useSelector(selectTime);
+   const prices = useSelector(selectPrices);
+   const time = useSelector(selectTime);
+
    const total = useSelector(selectTotalCount) ?? 0;
    const currentPage = useSelector(selectCurrentPage) ?? 1;
 
    const departureCity = useSelector(selectDepartureCity);
    const arrivalCity = useSelector(selectArrivalCity);
+   const departureDate = useSelector(selectDepartureDate);
+   const returnDate = useSelector(selectReturnDate);
 
    const loadingTrains = useSelector(selectLoadingTrains);
    const loadingLastTickets = useSelector(selectLoadingLastTickets);
@@ -77,72 +83,106 @@ const time = useSelector(selectTime);
    const LAST_TICKETS_API = import.meta.env.VITE_LAST_TICKETS;
 
    const url = useMemo(() => {
-   if (!departureId || !arrivalId || !TICKETS_API) {
-      return null;
-   }
+      if (!departureId || !arrivalId || !TICKETS_API) {
+         return null;
+      }
 
-   const params = new URLSearchParams({
-      from_city_id: departureId,
-      to_city_id: arrivalId,
-      limit: String(limit),
-      offset: String(offset),
-      sort: sort?.value || sort || "date",
-   });
+      const params = new URLSearchParams({
+         from_city_id: departureId,
+         to_city_id: arrivalId,
+         limit: String(limit),
+         offset: String(offset),
+         sort: sort?.value || sort || "date",
+      });
 
-   if (options.firstClass) params.append("have_first_class", "true");
-   if (options.secondClass) params.append("have_second_class", "true");
-   if (options.thirdClass) params.append("have_third_class", "true");
-   if (options.fourthClass) params.append("have_fourth_class", "true");
-   if (options.wifi) params.append("have_wifi", "true");
-   if (options.express) params.append("is_express", "true");
+      if (departureDate) {
+         params.append("date_start", departureDate);
+      }
 
-   if (prices.min) params.append("price_from", String(prices.min));
-   if (prices.max) params.append("price_to", String(prices.max));
+      if (returnDate) {
+   params.append("date_end", returnDate);
+}
 
-   if (time.to.departure.min !== 0) {
-      params.append("start_departure_hour_from", String(Math.floor(time.to.departure.min / 60)));
-   }
+      if (options?.firstClass) params.append("have_first_class", "true");
+      if (options?.secondClass) params.append("have_second_class", "true");
+      if (options?.thirdClass) params.append("have_third_class", "true");
+      if (options?.fourthClass) params.append("have_fourth_class", "true");
+      if (options?.wifi) params.append("have_wifi", "true");
+      if (options?.express) params.append("is_express", "true");
 
-   if (time.to.departure.max !== 24 * 60) {
-      params.append("start_departure_hour_to", String(Math.floor(time.to.departure.max / 60)));
-   }
+      if (prices?.min) params.append("price_from", String(prices.min));
+      if (prices?.max) params.append("price_to", String(prices.max));
 
-   if (time.to.arrival.min !== 0) {
-      params.append("start_arrival_hour_from", String(Math.floor(time.to.arrival.min / 60)));
-   }
+      if (time?.to?.departure?.min !== 0) {
+         params.append(
+            "start_departure_hour_from",
+            String(Math.floor(time.to.departure.min / 60))
+         );
+      }
 
-   if (time.to.arrival.max !== 24 * 60) {
-      params.append("start_arrival_hour_to", String(Math.floor(time.to.arrival.max / 60)));
-   }
+      if (time?.to?.departure?.max !== 24 * 60) {
+         params.append(
+            "start_departure_hour_to",
+            String(Math.floor(time.to.departure.max / 60))
+         );
+      }
 
-   if (time.back.departure.min !== 0) {
-      params.append("end_departure_hour_from", String(Math.floor(time.back.departure.min / 60)));
-   }
+      if (time?.to?.arrival?.min !== 0) {
+         params.append(
+            "start_arrival_hour_from",
+            String(Math.floor(time.to.arrival.min / 60))
+         );
+      }
 
-   if (time.back.departure.max !== 24 * 60) {
-      params.append("end_departure_hour_to", String(Math.floor(time.back.departure.max / 60)));
-   }
+      if (time?.to?.arrival?.max !== 24 * 60) {
+         params.append(
+            "start_arrival_hour_to",
+            String(Math.floor(time.to.arrival.max / 60))
+         );
+      }
 
-   if (time.back.arrival.min !== 0) {
-      params.append("end_arrival_hour_from", String(Math.floor(time.back.arrival.min / 60)));
-   }
+      if (time?.back?.departure?.min !== 0) {
+         params.append(
+            "end_departure_hour_from",
+            String(Math.floor(time.back.departure.min / 60))
+         );
+      }
 
-   if (time.back.arrival.max !== 24 * 60) {
-      params.append("end_arrival_hour_to", String(Math.floor(time.back.arrival.max / 60)));
-   }
+      if (time?.back?.departure?.max !== 24 * 60) {
+         params.append(
+            "end_departure_hour_to",
+            String(Math.floor(time.back.departure.max / 60))
+         );
+      }
 
-   return `${TICKETS_API}?${params.toString()}`;
-}, [
-   departureId,
-   arrivalId,
-   TICKETS_API,
-   limit,
-   offset,
-   sort,
-   options,
-   prices,
-   time,
-]);
+      if (time?.back?.arrival?.min !== 0) {
+         params.append(
+            "end_arrival_hour_from",
+            String(Math.floor(time.back.arrival.min / 60))
+         );
+      }
+
+      if (time?.back?.arrival?.max !== 24 * 60) {
+         params.append(
+            "end_arrival_hour_to",
+            String(Math.floor(time.back.arrival.max / 60))
+         );
+      }
+
+      return `${TICKETS_API}?${params.toString()}`;
+   }, [
+      departureId,
+      arrivalId,
+      TICKETS_API,
+      limit,
+      offset,
+      sort,
+      departureDate,
+      returnDate,
+      options,
+      prices,
+      time,
+   ]);
 
    useEffect(() => {
       if (!url) return;

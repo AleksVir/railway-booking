@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AutoComplete } from "antd";
 
 import useDebounce from "../../../hooks/useDebounce.jsx";
 
 import {
    changeSearchFields,
+   selectDepartureCity,
+   selectArrivalCity,
 } from "../../../store/slices/searchSlice.jsx";
 
-import { changeOffset, setCurrentPage } from "../../../store/slices/sortSlice.jsx";
+import {
+   changeOffset,
+   setCurrentPage,
+} from "../../../store/slices/sortSlice.jsx";
+
 import { removeTrainData } from "../../../store/slices/trainSlice.jsx";
 
 import consts from "../consts.jsx";
@@ -16,12 +22,21 @@ import consts from "../consts.jsx";
 function Direction({ name, placeholder, className }) {
    const dispatch = useDispatch();
 
-   const [value, setValue] = useState("");      // input
+   const departureCity = useSelector(selectDepartureCity);
+   const arrivalCity = useSelector(selectArrivalCity);
+
+   const savedCity =
+      name === consts.depCity ? departureCity : arrivalCity;
+
+   const [value, setValue] = useState(savedCity?.name || "");
    const [options, setOptions] = useState([]);
 
    const debounced = useDebounce(value, 300);
 
-   // ===== fetch =====
+   useEffect(() => {
+      setValue(savedCity?.name || "");
+   }, [savedCity]);
+
    useEffect(() => {
       const fetchCities = async () => {
          if (debounced.length < 2) {
@@ -38,7 +53,7 @@ function Direction({ name, placeholder, className }) {
 
             setOptions(
                data.map((c) => ({
-                  value: c.name,   // 👈 важно: value = текст
+                  value: c.name,
                   label: c.name,
                   id: c._id,
                }))
@@ -51,7 +66,6 @@ function Direction({ name, placeholder, className }) {
       fetchCities();
    }, [debounced]);
 
-   // ===== select =====
    const onSelect = (_, option) => {
       dispatch(
          changeSearchFields({
@@ -68,13 +82,26 @@ function Direction({ name, placeholder, className }) {
       setOptions([]);
    };
 
+   const onChange = (newValue) => {
+      setValue(newValue);
+
+      if (!newValue) {
+         dispatch(
+            changeSearchFields({
+               name,
+               value: "",
+            })
+         );
+      }
+   };
+
    return (
       <AutoComplete
          className={className}
          placeholder={placeholder}
          options={options}
          value={value}
-         onChange={setValue}
+         onChange={onChange}
          onSelect={onSelect}
          filterOption={false}
          allowClear

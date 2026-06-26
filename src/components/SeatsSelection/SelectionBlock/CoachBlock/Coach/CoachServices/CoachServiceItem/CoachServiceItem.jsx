@@ -63,20 +63,22 @@ function CoachServiceItem({
    }
 
    return (
-      <Tooltip
-         overlayClassName="icons-tooltip"
-         title={title}
-         placement="bottom"
+   <Tooltip
+      classNames={{
+         root: "icons-tooltip",
+      }}
+      title={title}
+      placement="bottom"
+   >
+      <div
+         className={className}
+         onMouseEnter={mouseEnterHandler}
+         onMouseLeave={mouseLeaveHandler}
       >
-         <div
-            className={className}
-            onMouseEnter={mouseEnterHandler}
-            onMouseLeave={mouseLeaveHandler}
-         >
-            <img src={icon} alt={`иконка ${name}`} />
-         </div>
-      </Tooltip>
-   );
+         <img src={icon} alt={`иконка ${name}`} />
+      </div>
+   </Tooltip>
+);
 }
 
 CoachServiceItem.propTypes = {
