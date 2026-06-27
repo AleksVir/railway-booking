@@ -108,11 +108,24 @@
 .radioGroup {
    width: 100%;
    padding-bottom: 5rem;
+
+   :global(.ant-radio-wrapper) {
+      display: flex;
+      align-items: flex-start;
+   }
+
+   :global(.ant-radio) {
+      margin-top: 3px;
+   }
+
    .radioRow {
       padding-top: 2rem;
    }
 }
-
+.paymentOnline {
+   display: flex;
+   flex-direction: column;
+}
 @media only screen and (max-width: 1300px) {
    .card {
       .row {

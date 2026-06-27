@@ -26,7 +26,11 @@ function SuccessfulOrderPage() {
          {(!orderNumber || !sum || !name) && <Redirect />}
       </div>
    );
-   return <Layout pic={picsOptions.success} body={body} />;
+   return (
+   <Layout pic={picsOptions.success}>
+      {body}
+   </Layout>
+);
 }
 
 export default SuccessfulOrderPage;

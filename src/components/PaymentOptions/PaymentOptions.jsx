@@ -159,36 +159,38 @@ function PaymentOptions() {
                rules={rules.paymentMethod}
             >
                <Radio.Group className={styles.radioGroup}>
-                  <div className={styles.section}>
-                     <Radio
-                        className={`${styles.radioRow} radioRow`}
-                        value={paymentTypes.onlineEng}
-                     >
-                        {paymentTypes.online}
+   <div className={styles.section}>
+      <div className={styles.paymentOnline}>
+         <Radio
+            className={`${styles.radioRow} radioRow`}
+            value={paymentTypes.onlineEng}
+         >
+            {paymentTypes.online}
+         </Radio>
 
-                        <div className={styles.onlinePayments}>
-                           <div className={styles.paymentMethod}>
-                              {paymentTypes.card}
-                           </div>
-                           <div className={styles.paymentMethod}>
-                              {paymentTypes.payPal}
-                           </div>
-                           <div className={styles.paymentMethod}>
-                              {paymentTypes.visa}
-                           </div>
-                        </div>
-                     </Radio>
-                  </div>
+         <div className={styles.onlinePayments}>
+            <div className={styles.paymentMethod}>
+               {paymentTypes.card}
+            </div>
+            <div className={styles.paymentMethod}>
+               {paymentTypes.payPal}
+            </div>
+            <div className={styles.paymentMethod}>
+               {paymentTypes.visa}
+            </div>
+         </div>
+      </div>
+   </div>
 
-                  <div className={styles.section}>
-                     <Radio
-                        value={paymentTypes.cashEng}
-                        className={`${styles.radioRow} radioRow`}
-                     >
-                        {paymentTypes.cash}
-                     </Radio>
-                  </div>
-               </Radio.Group>
+   <div className={styles.section}>
+      <Radio
+         value={paymentTypes.cashEng}
+         className={`${styles.radioRow} radioRow`}
+      >
+         {paymentTypes.cash}
+      </Radio>
+   </div>
+</Radio.Group>
             </Form.Item>
          </Form>
       </section>

@@ -10,7 +10,7 @@ import PasItem from "./PasItem/PasItem.jsx";
 import { postOrder } from "../../store/thunks/asyncThunks.jsx";
 
 import { selectTrainsOptions } from "../../store/slices/trainsSlice.jsx";
-import { selectIndex, selectTrains } from "../../store/slices/trainSlice.jsx";
+import { selectTrains } from "../../store/slices/trainSlice.jsx";
 import { selectPersonalData } from "../../store/slices/personalDataSlice.jsx";
 import { selectSelectedSeats } from "../../store/slices/seatsSlice.jsx";
 import {
@@ -52,7 +52,6 @@ const seatsModifier = (obj) =>
 function OrderConfirmation() {
    const navigate = useNavigate();
    const dispatch = useDispatch();
-   const selectedTrainIndex = useSelector(selectIndex);
    const trains = useSelector(selectTrains);
    const seatsDep = useSelector(selectSelectedSeats)[directions.departure];
    const seatsArr = useSelector(selectSelectedSeats)[directions.arrival];
@@ -95,84 +94,90 @@ function OrderConfirmation() {
 
    const editTrainBtn = editBtnMaker(links.trains);
 
-   const clickHandler = () => {
-      const seatDataConstructor = (el) => {
-         const pas = passengers?.find((item) => item?.id === el?.passengerId);
-         const date = pas[pasFieldNames?.dateOfBirth]?.split('.');
-         return {
-            coach_id: el?.coachId,
-            person_info: {
-               is_adult:
-                  pas[pasFieldNames?.passengerType] === passengerTypes?.adults,
-               first_name: pas[pasFieldNames?.firstName],
-               last_name: pas[pasFieldNames?.lastName],
-               patronymic: pas[pasFieldNames?.fathersName],
-               gender: pas[pasFieldNames?.gender] === 'true',
-               birthday: `${date[2]}-${date[1]}-${date[0]}`,
-               document_type:
-                  pas[pasFieldNames?.docType] === docTypes?.passport
-                     ? docTypes?.passportRus.toLowerCase()
-                     : docTypes?.birthCertifRus.toLowerCase(),
-               document_data:
-                  pas[pasFieldNames?.docType] === docTypes?.passport
-                     ? `${pas[pasFieldNames?.docSerialNumber]} ${
-                          pas[pasFieldNames?.docNumberPass]
-                       }`
-                     : pasFieldNames?.docNumberSertif,
-            },
-            seat_number: el?.seatNumber,
-            is_child:
-               pas[pasFieldNames?.passengerType] === passengerTypes?.children,
-         };
+  const clickHandler = () => {
+   const seatDataConstructor = (el) => {
+      const pas = passengers?.find((item) => item?.id === el?.passengerId);
+
+      if (!pas) return null;
+
+      const date = pas[pasFieldNames?.dateOfBirth]?.split('.') || [];
+
+      return {
+         coach_id: el?.coachId,
+         person_info: {
+            is_adult:
+               pas[pasFieldNames?.passengerType] === passengerTypes?.adults,
+            first_name: pas[pasFieldNames?.firstName],
+            last_name: pas[pasFieldNames?.lastName],
+            patronymic: pas[pasFieldNames?.fathersName],
+            gender: pas[pasFieldNames?.gender] === 'true',
+            birthday:
+               date.length === 3
+                  ? `${date[2]}-${date[1]}-${date[0]}`
+                  : null,
+            document_type:
+               pas[pasFieldNames?.docType] === docTypes?.passport
+                  ? docTypes?.passportRus.toLowerCase()
+                  : docTypes?.birthCertifRus.toLowerCase(),
+            document_data:
+               pas[pasFieldNames?.docType] === docTypes?.passport
+                  ? `${pas[pasFieldNames?.docSerialNumber]} ${
+                       pas[pasFieldNames?.docNumberPass]
+                    }`
+                  : pas[pasFieldNames?.docNumberSertif],
+         },
+         seat_number: el?.seatNumber,
+         is_child:
+            pas[pasFieldNames?.passengerType] === passengerTypes?.children,
       };
-
-      const user = {
-         first_name: personalData[fieldNames?.firstName],
-         last_name: personalData[fieldNames?.lastName],
-         patronymic: personalData[fieldNames?.fathersName],
-         phone: personalData[fieldNames?.phone],
-         email: personalData[fieldNames?.email],
-         payment_method: paymentOption,
-      };
-
-      const depId = trains[directions.departure]?._id;
-      const arrId = trains[directions.arrival]?._id;
-
-      const request = { user };
-
-      if (depId) {
-         const seatsDepModified = seatsModifier(seatsDep);
-         const seatsDepForRequest = seatsDepModified?.map((el) =>
-            seatDataConstructor(el)
-         );
-
-         request[directions.departure] = {
-            route_direction_id: depId,
-            seats: seatsDepForRequest,
-         };
-      }
-      if (arrId) {
-         const seatsArrModified = seatsModifier(seatsArr);
-         const seatsArrForRequest = seatsArrModified?.map((el) =>
-            seatDataConstructor(el)
-         );
-
-         request[directions.arrival] = {
-            route_direction_id: arrId,
-            seats: seatsArrForRequest,
-         };
-      }
-
-      dispatch(
-         postOrder({
-            url: import.meta.env.VITE_POST_ORDER,
-            request,
-         })
-      );
    };
 
-   useEffect(() => {
-      if (!requestLoading && !requestError && requestResponse) {
+   const user = {
+      first_name: personalData[fieldNames?.firstName],
+      last_name: personalData[fieldNames?.lastName],
+      patronymic: personalData[fieldNames?.fathersName],
+      phone: personalData[fieldNames?.phone],
+      email: personalData[fieldNames?.email],
+      payment_method: paymentOption,
+   };
+
+   const depId = trains[directions.departure]?._id;
+   const arrId = trains[directions.arrival]?._id;
+
+   const request = { user };
+
+   if (depId) {
+      const seatsDepModified = seatsModifier(seatsDep);
+
+      request[directions.departure] = {
+         route_direction_id: depId,
+         seats: seatsDepModified
+            .map(seatDataConstructor)
+            .filter(Boolean),
+      };
+   }
+
+   if (arrId) {
+      const seatsArrModified = seatsModifier(seatsArr);
+
+      request[directions.arrival] = {
+         route_direction_id: arrId,
+         seats: seatsArrModified
+            .map(seatDataConstructor)
+            .filter(Boolean),
+      };
+   }
+
+   dispatch(
+      postOrder({
+         url: import.meta.env.VITE_POST_ORDER,
+         request,
+      })
+   ).then((res) => {
+      if (
+         res.type === "order/postOrder/fulfilled" &&
+         res.payload?.status
+      ) {
          dispatch(
             addOrderData({
                orderNumber: `${getRandomInt(10, 548)}${personalData[
@@ -188,27 +193,34 @@ function OrderConfirmation() {
                }`,
             })
          );
+
          navigate(links.success);
       }
-   }, [
-      dispatch,
-      navigate,
-      personalData,
-      requestError,
-      requestLoading,
-      requestResponse,
-      sum,
-   ]);
+   });
+
+};
+   
+
+const selectedTicket =
+   trainsOptions?.find(
+      (item) =>
+         item?.ticket?.departure?._id ===
+         trains[directions.departure]?._id
+   )?.ticket || {
+      departure: trains[directions.departure],
+      arrival: trains[directions.arrival],
+   };
 
    const trainCard = (
-      <div className={styles.card}>
-         <div className={styles.header}>Поезд</div>
-         <TrainCard
-            ticket={trainsOptions[selectedTrainIndex]?.ticket}
-            editBtn={editTrainBtn}
-         />
-      </div>
-   );
+   <div className={styles.card}>
+      <div className={styles.header}>Поезд</div>
+
+      <TrainCard
+         ticket={selectedTicket}
+         editBtn={editTrainBtn}
+      />
+   </div>
+);
 
    const allPassengers = (
       <div className={styles.card}>

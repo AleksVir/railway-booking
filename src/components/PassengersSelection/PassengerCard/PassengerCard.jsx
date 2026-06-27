@@ -817,26 +817,18 @@ function PassengerCard({
       </div>
    );
 
-   const button = (
-      <Form.Item className={bottomSectionStyles}>
-         {!thisPassenger[0] && !disabledForwardBtn && (
-            <Button
-               type="primary"
-               htmlType="submit"
-               className="passengerCard__button"
-               disabled={disabledForwardBtn}
-            >
-               Следующий пассажир
-            </Button>
-         )}
-
-         {thisPassenger[0] && (
-            <button type="submit" className={styles.changeButton}>
-               Изменить
-            </button>
-         )}
-      </Form.Item>
-   );
+  const button = (
+   <Form.Item className={bottomSectionStyles}>
+      <Button
+         type="primary"
+         htmlType="submit"
+         className="passengerCard__button"
+         disabled={disabledForwardBtn}
+      >
+         Следующий пассажир
+      </Button>
+   </Form.Item>
+);
 
    return (
       <div id={id} ref={title}>

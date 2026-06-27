@@ -17,7 +17,7 @@ function HowItWorks() {
             <div className={styles.how__wrapperTop}>
                <div className={styles.how__title}>как это работает</div>
 
-               <HashLink smooth to={`${pathname}/#contacts`}>
+               <HashLink smooth to={`${pathname}#contacts`}>
                   <button className={styles.how__btn} type="button">
                      Узнать больше
                   </button>

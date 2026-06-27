@@ -83,11 +83,13 @@ function RightPart({
                <img src={food} alt="иконкa еда" />
             </div>
          </div>
-         {id !== null && (
-            <button type="button" onClick={onClick} className={styles.button}>
-               Выбрать места
-            </button>
-         )}
+         {editBtn ? (
+   editBtn
+) : (
+   <button type="button" onClick={onClick} className={styles.button}>
+      Выбрать места
+   </button>
+)}
 
          {id === null && editBtn}
       </>
@@ -102,7 +104,7 @@ RightPart.propTypes = {
    conditioner: PropTypes.bool,
    onClick: PropTypes.func.isRequired,
    express: PropTypes.bool,
-   id: PropTypes.number,
+   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
    editBtn: PropTypes.node,
 };
 

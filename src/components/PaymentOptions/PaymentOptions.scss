@@ -19,7 +19,12 @@
 }
 
 .ant-radio-wrapper.ant-radio-wrapper-in-form-item.radioRow {
+   display: flex;
+   align-items: flex-start;
+
    .ant-radio {
+      margin-top: 0rem;
+
       .ant-radio-inner {
          width: 2.8rem;
          height: 2.8rem;
@@ -28,6 +33,7 @@
          background-color: transparent;
       }
    }
+
    > span:last-child {
       margin-left: 1rem;
       @include mixins.font(var(--fw-4), var(--fs-24), var(--fh-28), var(--color-grey));

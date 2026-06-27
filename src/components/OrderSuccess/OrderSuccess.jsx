@@ -36,19 +36,21 @@ function OrderSuccess() {
    const dispatch = useDispatch();
    const navigate = useNavigate();
 
-   useEffect(() => {
-      dispatch(removeLastTicketsData());
-      dispatch(removeNumOfAllPassengers());
-      dispatch(removeOrderConfirmationData());
-      dispatch(removeAllPassengers());
-      dispatch(removePersonalData());
-      dispatch(removeSearchData());
-      dispatch(removeSeatsData());
-      dispatch(removeSidebarSelectionData());
-      dispatch(removeSortData());
-      dispatch(removeTrainData());
-      dispatch(removeTrainsData());
-   }, [dispatch]);
+   const clickHandler = () => {
+   dispatch(removeLastTicketsData());
+   dispatch(removeNumOfAllPassengers());
+   dispatch(removeOrderConfirmationData());
+   dispatch(removeAllPassengers());
+   dispatch(removePersonalData());
+   dispatch(removeSearchData());
+   dispatch(removeSeatsData());
+   dispatch(removeSidebarSelectionData());
+   dispatch(removeSortData());
+   dispatch(removeTrainData());
+   dispatch(removeTrainsData());
+
+   navigate(links.main);
+};
 
    const title = useRef(document.createElement('section'));
    useEffect(() => {
@@ -59,9 +61,7 @@ function OrderSuccess() {
    const sum = useSelector(selectSum);
    const name = useSelector(selectName);
 
-   const clickHandler = () => {
-      navigate(links.main);
-   };
+ 
 
    return (
       <section className={styles.orderSuccess} ref={title}>
