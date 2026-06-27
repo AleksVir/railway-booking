@@ -27,7 +27,6 @@ import { addOrderData } from "../../store/slices/orderSlice.jsx";
 import links from "../../data/links.jsx";
 import directions from "../../data/directions.jsx";
 import fieldNames from "../PaymentOptions/fieldNames.jsx";
-// eslint-disable-next-line import/no-named-default
 import { default as pasFieldNames } from "../PassengersSelection/PassengerCard/fieldNames.jsx";
 import calculateSum from "../../utils/calculateSum.jsx";
 import paymentTypes from "../PaymentOptions/paymentTypes.jsx";

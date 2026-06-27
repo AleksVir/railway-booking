@@ -112,11 +112,17 @@ function PassengersSelection() {
       setPassArray((prev) => prev.filter((el) => el.id !== id));
    };
 
+   const selectedSeatsCount = seatsDepModified.length + seatsArrModified.length;
+
+   const canGoNext = selectedSeatsCount > 0 && unchosenSeats.length === 0;
+
    const clickHandler = () => {
+      if (!canGoNext) {
+         return;
+      }
+
       navigate(links.paymentOptions);
    };
-
-   const canGoNext = seatsDep.length > 0 || seatsArr.length > 0;
 
    return (
       <div>
@@ -149,16 +155,23 @@ function PassengersSelection() {
             </button>
          )}
 
-         {(seatsDep.length > 0 || seatsArr.length > 0) && (
+         {selectedSeatsCount > 0 && (
             <div className={styles.buttonWrapper}>
                <button
-   ref={forwardBtn}
-   onClick={clickHandler}
-   type="button"
-   disabled={!canGoNext}
->
-   далее
-</button>
+                  ref={forwardBtn}
+                  onClick={clickHandler}
+                  type="button"
+                  disabled={!canGoNext}
+               >
+                  далее
+               </button>
+
+               {!canGoNext && (
+                  <p className={styles.notice}>
+                     Заполните данные всех пассажиров и закрепите каждое
+                     выбранное место за пассажиром.
+                  </p>
+               )}
             </div>
          )}
       </div>

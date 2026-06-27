@@ -55,7 +55,6 @@ function PricesTable({ coach, numOfTop, numOfBottom, numOfSide }) {
 }
 
 PricesTable.propTypes = {
-   // eslint-disable-next-line react/forbid-prop-types
    coach: PropTypes.object.isRequired,
    numOfTop: PropTypes.number.isRequired,
    numOfBottom: PropTypes.number.isRequired,

@@ -1,7 +1,3 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable camelcase */
 
 import React, {
    useState,

@@ -51,7 +51,6 @@ function SeatsTable({ coach, numOfTop, numOfBottom, numOfSide, numOfSeats }) {
 }
 
 SeatsTable.propTypes = {
-   // eslint-disable-next-line react/forbid-prop-types
    coach: PropTypes.object.isRequired,
    numOfTop: PropTypes.number.isRequired,
    numOfBottom: PropTypes.number.isRequired,

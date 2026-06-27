@@ -25,6 +25,7 @@ import numOfPassengersReducer from "./slices/numOfpassengersSlice";
 import passengersReducer from "./slices/passengersSlice";
 import personalDataReducer from "./slices/personalDataSlice";
 import orderReducer from "./slices/orderSlice";
+import orderConfirmationReducer from "./slices/orderConfirmationSlice.jsx";
 
 const rootReducer = combineReducers({
    lastTickets: lastTicketsReducer,
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
    passengers: passengersReducer,
    personalData: personalDataReducer,
    order: orderReducer,
+   orderConfirmation: orderConfirmationReducer,
 });
 
 const persistConfig = {
@@ -64,6 +66,5 @@ export const store = configureStore({
          },
       }),
 });
-console.log("storage:", storage);
 export const persistor = persistStore(store);
 export default store;

@@ -31,3 +31,15 @@
       );
    }
 }
+
+.notice {
+   margin-top: 1.5rem;
+   text-align: right;
+
+   @include mixins.font(
+      var(--fw-4),
+      var(--fs-18),
+      var(--fh-21),
+      var(--color-accent)
+   );
+}

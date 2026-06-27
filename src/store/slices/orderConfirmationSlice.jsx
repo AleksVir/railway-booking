@@ -41,12 +41,12 @@ export const { removeOrderConfirmationData } =
    orderConfirmationSlice.actions;
 
 export const selectResponse = (state) =>
-   state.order.response;
+   state.orderConfirmation.response;
 
 export const selectLoading = (state) =>
-   state.order.loading;
+   state.orderConfirmation.loading;
 
 export const selectError = (state) =>
-   state.order.error;
+   state.orderConfirmation.error;
 
 export default orderConfirmationSlice.reducer;

@@ -52,7 +52,6 @@ function PasItem({ pas }) {
 }
 
 PasItem.propTypes = {
-   // eslint-disable-next-line react/forbid-prop-types
    pas: PropTypes.object.isRequired,
 };
 
